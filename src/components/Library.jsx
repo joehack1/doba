@@ -1,35 +1,6 @@
 // src/components/Library.jsx
 import React from "react";
-const TrackList = ({ tracks = [], onPlay = () => {} }) => {
-    if (!tracks || tracks.length === 0) {
-        return <Empty>No tracks in your library</Empty>;
-    }
-
-    const fmtMs = (ms) => {
-        if (ms == null) return "";
-        const s = Math.floor(ms / 1000);
-        const m = Math.floor(s / 60);
-        const sec = s % 60;
-        return `${m}:${sec.toString().padStart(2, "0")}`;
-    };
-
-    return (
-        <List>
-            {tracks.map((t, i) => (
-                <Track key={t.id ?? i} onClick={() => onPlay(t)}>
-                    <Meta>
-                        <Title>{t.title ?? t.name ?? "Unknown"}</Title>
-                        <Artist>{(t.artist || t.artists)?.toString?.() ?? t.artists?.map(a => a.name).join(", ")}</Artist>
-                    </Meta>
-                    <Right>
-                        <Duration>{t.duration_ms ? fmtMs(t.duration_ms) : t.duration ?? ""}</Duration>
-                        <PlayBtn onClick={(e) => { e.stopPropagation(); onPlay(t); }}>Play</PlayBtn>
-                    </Right>
-                </Track>
-            ))}
-        </List>
-    );
-};
+import styled from "styled-components";
 
 const List = styled.div`
     display:flex;
@@ -87,13 +58,44 @@ const PlayBtn = styled.button`
 
 const Empty = styled.div`
     color:#666;
-    padding
-import styled from "styled-components";
+    padding: 20px;
+`;
 
 const Head = styled.div`
   display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;
   h3{ margin:0; }
 `;
+
+const TrackList = ({ tracks = [], onPlay = () => {} }) => {
+    if (!tracks || tracks.length === 0) {
+        return <Empty>No tracks in your library</Empty>;
+    }
+
+    const fmtMs = (ms) => {
+        if (ms == null) return "";
+        const s = Math.floor(ms / 1000);
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${m}:${sec.toString().padStart(2, "0")}`;
+    };
+
+    return (
+        <List>
+            {tracks.map((t, i) => (
+                <Track key={t.id ?? i} onClick={() => onPlay(t)}>
+                    <Meta>
+                        <Title>{t.title ?? t.name ?? "Unknown"}</Title>
+                        <Artist>{t.artist || (t.artists?.map(a => a.name).join(", ")) || "Unknown"}</Artist>
+                    </Meta>
+                    <Right>
+                        <Duration>{t.duration_ms ? fmtMs(t.duration_ms) : t.duration ?? ""}</Duration>
+                        <PlayBtn onClick={(e) => { e.stopPropagation(); onPlay(t); }}>Play</PlayBtn>
+                    </Right>
+                </Track>
+            ))}
+        </List>
+    );
+};
 
 export default function Library({ tracks, onPlay, currentIndex = -1 }) {
     return (
@@ -101,7 +103,7 @@ export default function Library({ tracks, onPlay, currentIndex = -1 }) {
             <Head>
                 <h3>Your Library</h3>
             </Head>
-            <TrackList tracks={tracks} onPlay={onPlay} currentIndex={currentIndex} />
+            <TrackList tracks={tracks} onPlay={onPlay} />
         </>
     );
 }
