@@ -17,8 +17,8 @@ const Item = styled.li`
   padding:10px;
   border-radius:10px;
   cursor:pointer;
-  background: ${({ active }) => (active ? 'rgba(157,78,221,0.08)' : 'transparent')};
-  border-left: 4px solid ${({ active }) => (active ? '#9d4edd' : 'transparent')};
+  background: ${({ active, theme }) => (active ? 'rgba(0,184,217,0.08)' : 'transparent')};
+  border-left: 4px solid ${({ active, theme }) => (active ? theme.colors.primary : 'transparent')};
   transition: background 150ms, border-left 150ms;
   &:hover { background: rgba(255,255,255,0.02); }
 `;

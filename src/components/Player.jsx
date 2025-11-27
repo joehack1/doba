@@ -50,11 +50,11 @@ const IconButton = styled.button`
 `;
 const Slider = styled.input.attrs({ type: "range" })`
   width: 360px;
-  accent-color: #9d4edd;
+  accent-color: ${({ theme }) => theme.colors.primary};
   height: 6px;
   border-radius: 6px;
   &::-webkit-slider-runnable-track { height: 6px; background: rgba(255,255,255,0.06); border-radius:6px; }
-  &::-webkit-slider-thumb { -webkit-appearance: none; width:14px;height:14px;border-radius:50%;background:#9d4edd;margin-top:-4px; }
+  &::-webkit-slider-thumb { -webkit-appearance: none; width:14px;height:14px;border-radius:50%;background: ${({ theme }) => theme.colors.primary};margin-top:-4px; }
 `;
 
 export default function Player({ tracks, currentIndex, onNext, onPrev }) {
