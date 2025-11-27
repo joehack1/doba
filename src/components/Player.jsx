@@ -6,13 +6,16 @@ import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 
 const Container = styled.div`
   grid-column: 1 / -1;
-  background: rgba(255,255,255,0.03);
-  border-radius: ${(p) => p.theme.radius};
-  padding: 16px 20px;
+  background: ${({theme}) => theme.colors.glass};
+  backdrop-filter: blur(20px);
+  border: 1px solid ${({theme}) => theme.colors.glassBorder};
+  border-radius: ${({theme}) => theme.radius};
+  padding: 20px 24px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: ${({theme}) => theme.shadows.large};
+  transition: all 0.3s ease;
 `;
 
 const Info = styled.div`
