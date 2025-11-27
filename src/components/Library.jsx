@@ -87,8 +87,7 @@ const PlayBtn = styled.button`
 
 const Empty = styled.div`
     color:#666;
-    padding:12px 0;
-`;
+    padding
 import styled from "styled-components";
 
 const Head = styled.div`
