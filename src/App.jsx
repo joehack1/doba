@@ -56,12 +56,32 @@ export default function App() {
   const track4 = new URL("./assets/Lucky-Dube-Can-t-Blame-You.mp3", import.meta.url).href;
   const track5 = new URL("./assets/Lucky-Dube-Respect.mp3", import.meta.url).href;
 
+  // Import images for album art
+  const img1 = new URL("./assets/67221.jpg", import.meta.url).href;
+  const img2 = new URL("./assets/4038793.jpg", import.meta.url).href;
+  const img3 = new URL("./assets/10645800.jpg", import.meta.url).href;
+  const img4 = new URL("./assets/ntfo_4pun_220302.jpg", import.meta.url).href;
+  const img5 = new URL("./assets/SL-123119-26540-18.jpg", import.meta.url).href;
+
+  const images = [img1, img2, img3, img4, img5];
+
+  // Shuffle function to randomize album art assignment
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  const shuffledImages = shuffleArray([...images]);
+
   const [tracks] = useState([
-    { id: 1, title: "Bum Bum", artist: "Diamond Platnumz", url: track1, cover: "/assets/cover-placeholder.png", duration: 0 },
-    { id: 2, title: "Kamwambie", artist: "Diamond Platnumz", url: track2, cover: "/assets/cover-placeholder.png", duration: 0 },
-    { id: 3, title: "Back To My Roots (Live)", artist: "Lucky Dube", url: track3, cover: "/assets/cover-placeholder.png", duration: 0 },
-    { id: 4, title: "Can't Blame You", artist: "Lucky Dube", url: track4, cover: "/assets/cover-placeholder.png", duration: 0 },
-    { id: 5, title: "Respect", artist: "Lucky Dube", url: track5, cover: "/assets/cover-placeholder.png", duration: 0 },
+    { id: 1, title: "Bum Bum", artist: "Diamond Platnumz", url: track1, cover: shuffledImages[0], duration: 0 },
+    { id: 2, title: "Kamwambie", artist: "Diamond Platnumz", url: track2, cover: shuffledImages[1], duration: 0 },
+    { id: 3, title: "Back To My Roots (Live)", artist: "Lucky Dube", url: track3, cover: shuffledImages[2], duration: 0 },
+    { id: 4, title: "Can't Blame You", artist: "Lucky Dube", url: track4, cover: shuffledImages[3], duration: 0 },
+    { id: 5, title: "Respect", artist: "Lucky Dube", url: track5, cover: shuffledImages[4], duration: 0 },
   ]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
