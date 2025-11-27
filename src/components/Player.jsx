@@ -34,9 +34,27 @@ const Controls = styled.div`
   gap:12px;
   align-items:center;
 `;
+const IconButton = styled.button`
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 8px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 120ms, transform 120ms;
+  &:hover { background: rgba(255,255,255,0.03); transform: translateY(-2px); }
+`;
 const Slider = styled.input.attrs({ type: "range" })`
   width: 360px;
   accent-color: #9d4edd;
+  height: 6px;
+  border-radius: 6px;
+  &::-webkit-slider-runnable-track { height: 6px; background: rgba(255,255,255,0.06); border-radius:6px; }
+  &::-webkit-slider-thumb { -webkit-appearance: none; width:14px;height:14px;border-radius:50%;background:#9d4edd;margin-top:-4px; }
 `;
 
 export default function Player({ tracks, currentIndex, onNext, onPrev }) {
@@ -68,15 +86,15 @@ export default function Player({ tracks, currentIndex, onNext, onPrev }) {
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
         <Controls>
-          <button onClick={onPrev} aria-label="previous" title="Previous">
+          <IconButton onClick={onPrev} aria-label="previous" title="Previous">
             <FaBackward />
-          </button>
-          <button onClick={toggle} aria-label="play" title="Play/Pause" style={{ fontSize: 18 }}>
+          </IconButton>
+          <IconButton onClick={toggle} aria-label="play" title="Play/Pause" style={{ fontSize: 20 }}>
             {playing ? <FaPause /> : <FaPlay />}
-          </button>
-          <button onClick={onNext} aria-label="next" title="Next">
+          </IconButton>
+          <IconButton onClick={onNext} aria-label="next" title="Next">
             <FaForward />
-          </button>
+          </IconButton>
         </Controls>
 
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>

@@ -58,7 +58,7 @@ export default function App() {
       <Layout>
         <Sidebar />
         <Main>
-          <Library tracks={tracks} onPlay={(i) => setCurrentIndex(i)} />
+          <Library tracks={tracks} currentIndex={currentIndex} onPlay={(i) => setCurrentIndex(i)} />
         </Main>
 
         <Player

@@ -96,13 +96,13 @@ const Head = styled.div`
   h3{ margin:0; }
 `;
 
-export default function Library({ tracks, onPlay }) {
-  return (
-    <>
-      <Head>
-        <h3>Your Library</h3>
-      </Head>
-      <TrackList tracks={tracks} onPlay={onPlay} />
-    </>
-  );
+export default function Library({ tracks, onPlay, currentIndex = -1 }) {
+    return (
+        <>
+            <Head>
+                <h3>Your Library</h3>
+            </Head>
+            <TrackList tracks={tracks} onPlay={onPlay} currentIndex={currentIndex} />
+        </>
+    );
 }

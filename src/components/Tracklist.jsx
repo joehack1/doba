@@ -17,16 +17,19 @@ const Item = styled.li`
   padding:10px;
   border-radius:10px;
   cursor:pointer;
+  background: ${({ active }) => (active ? 'rgba(157,78,221,0.08)' : 'transparent')};
+  border-left: 4px solid ${({ active }) => (active ? '#9d4edd' : 'transparent')};
+  transition: background 150ms, border-left 150ms;
   &:hover { background: rgba(255,255,255,0.02); }
 `;
 const Cover = styled.img` width:48px;height:48px;border-radius:8px;object-fit:cover; `;
 const Meta = styled.div` line-height:1; h5{margin:0;} p{margin:0;font-size:12px;color:rgba(255,255,255,0.6);} `;
 
-export default function TrackList({ tracks = [], onPlay }) {
+export default function TrackList({ tracks = [], onPlay, currentIndex = -1 }) {
   return (
     <List>
       {tracks.map((t, i) => (
-        <Item key={t.id} onClick={() => onPlay(i)}>
+        <Item key={t.id} onClick={() => onPlay(i)} active={i === currentIndex}>
           <Cover src={t.cover || "/assets/cover-placeholder.png"} alt="" />
           <Meta>
             <h5>{t.title}</h5>
