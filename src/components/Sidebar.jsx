@@ -22,29 +22,21 @@ const Nav = styled.nav`
   display:flex;
   flex-direction:column;
   gap:10px;
+  button {
+    display:flex; gap:8px; align-items:center;
+    background:none; border:none; padding:8px 10px; color:inherit; cursor:pointer; border-radius:8px;
+    &:hover { background: rgba(255,255,255,0.03); }
+  }
 `;
 
-const NavButton = styled.button`
-  display:flex; gap:8px; align-items:center;
-  background:none; border:none; padding:8px 10px; color:inherit; cursor:pointer; border-radius:8px;
-  background: ${({ active }) => active ? 'rgba(255,255,255,0.1)' : 'none'};
-  &:hover { background: rgba(255,255,255,0.03); }
-`;
-
-export default function Sidebar({ currentView, onViewChange }){
+export default function Sidebar(){
   return (
     <Box>
       <Logo>Purpleify</Logo>
       <Nav>
-        <NavButton active={currentView === 'home'} onClick={() => onViewChange('home')}>
-          <FaHome /> Home
-        </NavButton>
-        <NavButton active={currentView === 'search'} onClick={() => onViewChange('search')}>
-          <FaSearch /> Search
-        </NavButton>
-        <NavButton active={currentView === 'library'} onClick={() => onViewChange('library')}>
-          <FaMusic /> Your Library
-        </NavButton>
+        <button><FaHome /> Home</button>
+        <button><FaSearch /> Search</button>
+        <button><FaMusic /> Library</button>
       </Nav>
       <div style={{ marginTop: "auto", fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
         Built with ❤️ React

@@ -4,9 +4,6 @@ import { theme } from "./theme";
 import Sidebar from "./components/Sidebar";
 import Library from "./components/Library";
 import Player from "./components/Player";
-import TopBar from "./components/TopBar";
-import Home from "./components/Home";
-import Search from "./components/Search";
 
 const Global = createGlobalStyle`
   * { box-sizing: border-box; }
@@ -38,7 +35,7 @@ const Global = createGlobalStyle`
 const Layout = styled.div`
   display: grid;
   grid-template-columns: 260px 1fr;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr auto;
   height: 100vh;
   gap: 20px;
   padding: 24px;
@@ -88,26 +85,14 @@ export default function App() {
   ]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentView, setCurrentView] = useState('home');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const onViewChange = (view) => setCurrentView(view);
-  const onSearchChange = (query) => setSearchQuery(query);
-  const onPlay = (track) => {
-    const index = tracks.findIndex(t => t.id === track.id);
-    if (index !== -1) setCurrentIndex(index);
-  };
 
   return (
     <ThemeProvider theme={theme}>
       <Global />
       <Layout>
-        <Sidebar currentView={currentView} onViewChange={onViewChange} />
-        <TopBar onSearchChange={onSearchChange} />
+        <Sidebar />
         <Main>
-          {currentView === 'home' && <Home tracks={tracks} onPlay={onPlay} />}
-          {currentView === 'search' && <Search tracks={tracks} onPlay={onPlay} searchQuery={searchQuery} />}
-          {currentView === 'library' && <Library tracks={tracks} currentIndex={currentIndex} onPlay={onPlay} />}
+          <Library tracks={tracks} currentIndex={currentIndex} onPlay={(i) => setCurrentIndex(i)} />
         </Main>
 
         <Player
