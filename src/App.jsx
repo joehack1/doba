@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { theme } from "./theme";
 import Sidebar from "./components/Sidebar";
@@ -49,41 +49,8 @@ const Main = styled.main`
 
 export default function App() {
   // simple playlist state: array of tracks with {id,title,artist,url,cover}
-  // import mp3s from local assets
-  // Note: Vite will process these imports and return URLs
-  const track1 = new URL("./assets/Diamond-Platnumz-Bum-Bum.mp3", import.meta.url).href;
-  const track2 = new URL("./assets/Diamond-Platnumz-Kamwambie.mp3", import.meta.url).href;
-  const track3 = new URL("./assets/Lucky-Dube-Back-To-My-Roots-Live.mp3", import.meta.url).href;
-  const track4 = new URL("./assets/Lucky-Dube-Can-t-Blame-You.mp3", import.meta.url).href;
-  const track5 = new URL("./assets/Lucky-Dube-Respect.mp3", import.meta.url).href;
-
-  // Import images for album art
-  const img1 = new URL("./assets/67221.jpg", import.meta.url).href;
-  const img2 = new URL("./assets/4038793.jpg", import.meta.url).href;
-  const img3 = new URL("./assets/10645800.jpg", import.meta.url).href;
-  const img4 = new URL("./assets/ntfo_4pun_220302.jpg", import.meta.url).href;
-  const img5 = new URL("./assets/SL-123119-26540-18.jpg", import.meta.url).href;
-
-  const images = [img1, img2, img3, img4, img5];
-
-  // Shuffle function to randomize album art assignment
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-  const shuffledImages = shuffleArray([...images]);
-
-  const [tracks] = useState([
-    { id: 1, title: "Bum Bum", artist: "Diamond Platnumz", url: track1, cover: shuffledImages[0], duration: 0 },
-    { id: 2, title: "Kamwambie", artist: "Diamond Platnumz", url: track2, cover: shuffledImages[1], duration: 0 },
-    { id: 3, title: "Back To My Roots (Live)", artist: "Lucky Dube", url: track3, cover: shuffledImages[2], duration: 0 },
-    { id: 4, title: "Can't Blame You", artist: "Lucky Dube", url: track4, cover: shuffledImages[3], duration: 0 },
-    { id: 5, title: "Respect", artist: "Lucky Dube", url: track5, cover: shuffledImages[4], duration: 0 },
-  ]);
+  // We'll fetch tracks from iTunes (online previews + artwork) instead of using local files.
+  const [tracks, setTracks] = useState([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [search, setSearch] = useState("");
@@ -94,6 +61,48 @@ export default function App() {
     const q = search.toLowerCase();
     return tracks.filter(t => (t.title || "").toLowerCase().includes(q) || (t.artist || "").toLowerCase().includes(q));
   }, [search, tracks]);
+
+  // Listen for TopBar discover button event
+  useEffect(() => {
+    const onDiscover = () => {
+      // fetch for a few popular artists and append
+      fetchSeedArtists();
+    };
+    window.addEventListener('discover', onDiscover);
+    return () => window.removeEventListener('discover', onDiscover);
+  }, [tracks]);
+
+  // Fetch initial seed tracks on mount so the library isn't empty
+  useEffect(() => {
+    fetchSeedArtists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // fetch and append tracks from iTunes for some seed artists
+  async function fetchSeedArtists() {
+    try {
+      const { searchItunes } = await import('./services/itunes');
+      const seeds = ['Drake','Adele','Taylor Swift','Coldplay','The Weeknd','Billie Eilish'];
+      const results = [];
+      for (const s of seeds) {
+        try {
+          const r = await searchItunes(s, 12);
+          results.push(...r);
+        } catch (e) {
+          console.warn('itunes fetch failed for', s, e.message);
+        }
+      }
+
+      // dedupe by id
+      const existing = new Set(tracks.map(t => String(t.id)));
+      const newTracks = results.filter(t => t.url && !existing.has(String(t.id)));
+      if (newTracks.length) {
+        setTracks((prev) => [...prev, ...newTracks]);
+      }
+    } catch (err) {
+      console.error('Discover failed', err);
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -108,8 +117,14 @@ export default function App() {
         <Player
           tracks={filteredTracks}
           currentIndex={currentIndex}
-          onNext={() => setCurrentIndex((i) => (i + 1) % filteredTracks.length)}
-          onPrev={() => setCurrentIndex((i) => (i - 1 + filteredTracks.length) % filteredTracks.length)}
+          onNext={() => setCurrentIndex((i) => {
+            if (!filteredTracks.length) return i;
+            return (i + 1) % filteredTracks.length;
+          })}
+          onPrev={() => setCurrentIndex((i) => {
+            if (!filteredTracks.length) return i;
+            return (i - 1 + filteredTracks.length) % filteredTracks.length;
+          })}
           style={{ gridColumn: "1 / -1", marginTop: 0 }}
         />
       </Layout>

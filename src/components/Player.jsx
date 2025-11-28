@@ -27,6 +27,12 @@ const Cover = styled.img`
   width:64px; height:64px; border-radius:8px; object-fit:cover;
   box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 `;
+
+const CoverPlaceholder = styled.div`
+  width:64px; height:64px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+  background: linear-gradient(90deg,#7b3fe4,#ff49a1);
+  color: white; font-weight:700; box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+`;
 const Text = styled.div`
   line-height:1;
   h4{ margin:0; font-size:16px; color: ${({ theme }) => theme.colors.text}; }
@@ -80,7 +86,11 @@ export default function Player({ tracks, currentIndex, onNext, onPrev }) {
   return (
     <Container as={motion.div} initial={{ y: 30, opacity: 0 }} animate={{ y:0, opacity:1 }} transition={{ ease: "easeOut" }}>
       <Info>
-        <Cover src={track.cover || "/assets/cover-placeholder.png"} alt="cover" />
+        {track?.cover ? (
+          <Cover src={track.cover} alt="cover" />
+        ) : (
+          <CoverPlaceholder>{(track?.artist || "").charAt(0) || '♪'}</CoverPlaceholder>
+        )}
         <Text>
           <h4>{track.title || "No track selected"}</h4>
           <p>{track.artist || "—"}</p>

@@ -37,7 +37,14 @@ export default function TopBar({ inputRef, onSearch = () => {} }) {
       </Left>
 
       <Right>
-        <button style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.9)', padding: '6px 10px', borderRadius: 10 }}>Upgrade</button>
+        <button
+          id="discover-btn"
+          style={{ background: 'linear-gradient(90deg,#7b3fe4,#ff49a1)', border: 'none', color: 'white', padding: '6px 10px', borderRadius: 10, fontWeight: 700 }}
+          onClick={() => window.dispatchEvent(new CustomEvent('discover'))}
+        >
+          Discover
+        </button>
+        <button style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.9)', padding: '6px 10px', borderRadius: 10, marginLeft: 8 }}>Upgrade</button>
         <Avatar>J</Avatar>
       </Right>
     </Header>

@@ -25,7 +25,12 @@ const Card = styled.div`
 `;
 
 const Cover = styled.img`
-    width:64px; height:64px; border-radius:8px; object-fit:cover; margin-left:auto; box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+        width:64px; height:64px; border-radius:8px; object-fit:cover; margin-left:auto; box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+`;
+
+const CoverPlaceholder = styled.div`
+    width:64px; height:64px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+    background: linear-gradient(90deg,#7b3fe4,#ff49a1); color:white; font-weight:700;
 `;
 
 const SmallCard = styled.div`
@@ -81,7 +86,11 @@ export default function Library({ tracks = [], onPlay = () => {}, currentIndex =
                                 <strong style={{ fontSize: 14 }}>{t.title}</strong>
                                 <small style={{ color: "rgba(255,255,255,0.7)" }}>{t.artist}</small>
                             </div>
-                            <Cover src={t.cover} alt="cover" />
+                            {t.cover ? (
+                              <Cover src={t.cover} alt="cover" />
+                            ) : (
+                              <CoverPlaceholder>{(t.artist || '').charAt(0) || '♪'}</CoverPlaceholder>
+                            )}
                         </Card>
                     ))}
                 </Grid>
@@ -90,13 +99,17 @@ export default function Library({ tracks = [], onPlay = () => {}, currentIndex =
             <Section>
                 <h4 style={{ margin: "6px 0 8px 0" }}>Recently played</h4>
                 <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 6 }}>
-                    {recent.map((t, i) => (
-                        <SmallCard key={t.id ?? i} onClick={() => onPlay(i)}>
-                            <SmallCover src={t.cover} alt="cover" />
-                            <div style={{ fontSize: 13, fontWeight: 600 }}>{t.title}</div>
-                            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{t.artist}</div>
-                        </SmallCard>
-                    ))}
+                                        {recent.map((t, i) => (
+                                                <SmallCard key={t.id ?? i} onClick={() => onPlay(i)}>
+                                                        {t.cover ? (
+                                                            <SmallCover src={t.cover} alt="cover" />
+                                                        ) : (
+                                                            <div style={{ width: '100%', height: 88, borderRadius: 8, background: 'linear-gradient(90deg,#7b3fe4,#ff49a1)' }} />
+                                                        )}
+                                                        <div style={{ fontSize: 13, fontWeight: 600 }}>{t.title}</div>
+                                                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{t.artist}</div>
+                                                </SmallCard>
+                                        ))}
                 </div>
             </Section>
 
@@ -109,7 +122,7 @@ export default function Library({ tracks = [], onPlay = () => {}, currentIndex =
                                 <strong style={{ fontSize: 14 }}>{p.name}</strong>
                                 <small style={{ color: "rgba(255,255,255,0.7)" }}>{Math.floor(Math.random() * 50) + 10} songs</small>
                             </div>
-                            <Cover src={p.cover} alt="cover" />
+                            {p.cover ? <Cover src={p.cover} alt="cover" /> : <CoverPlaceholder>{p.name.charAt(0)}</CoverPlaceholder>}
                         </Card>
                     ))}
                 </Grid>
@@ -120,13 +133,17 @@ export default function Library({ tracks = [], onPlay = () => {}, currentIndex =
                 <List>
                     {tracks.map((t, i) => (
                         <TrackRow key={t.id ?? i} onClick={() => onPlay(i)}>
-                            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                                <img src={t.cover} alt="cover" style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover' }} />
-                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                    <strong style={{ fontSize: 14 }}>{t.title}</strong>
-                                    <small style={{ color: "rgba(255,255,255,0.7)" }}>{t.artist}</small>
-                                </div>
-                            </div>
+                                                        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                                                                {t.cover ? (
+                                                                    <img src={t.cover} alt="cover" style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover' }} />
+                                                                ) : (
+                                                                    <div style={{ width: 48, height: 48, borderRadius: 8, background: 'linear-gradient(90deg,#7b3fe4,#ff49a1)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700 }}>{(t.artist || '').charAt(0) || '♪'}</div>
+                                                                )}
+                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                        <strong style={{ fontSize: 14 }}>{t.title}</strong>
+                                                                        <small style={{ color: "rgba(255,255,255,0.7)" }}>{t.artist}</small>
+                                                                </div>
+                                                        </div>
                             <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>{t.duration || fmtMs(t.duration_ms)}</div>
                         </TrackRow>
                     ))}
