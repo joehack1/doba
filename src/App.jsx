@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { theme } from "./theme";
 import Sidebar from "./components/Sidebar";
 import Library from "./components/Library";
 import Player from "./components/Player";
+import SearchBar from "./components/SearchBar";
 
 const Global = createGlobalStyle`
   * { box-sizing: border-box; }
@@ -85,21 +86,30 @@ export default function App() {
   ]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [search, setSearch] = useState("");
+  const searchInputRef = useRef(null);
+
+  const filteredTracks = React.useMemo(() => {
+    if (!search) return tracks;
+    const q = search.toLowerCase();
+    return tracks.filter(t => (t.title || "").toLowerCase().includes(q) || (t.artist || "").toLowerCase().includes(q));
+  }, [search, tracks]);
 
   return (
     <ThemeProvider theme={theme}>
       <Global />
       <Layout>
-        <Sidebar />
+        <Sidebar onSearchClick={() => searchInputRef.current?.focus?.()} />
         <Main>
-          <Library tracks={tracks} currentIndex={currentIndex} onPlay={(i) => setCurrentIndex(i)} />
+          <SearchBar inputRef={searchInputRef} onSearch={(q) => setSearch(q)} />
+          <Library tracks={filteredTracks} currentIndex={currentIndex} onPlay={(i) => setCurrentIndex(i)} />
         </Main>
 
         <Player
-          tracks={tracks}
+          tracks={filteredTracks}
           currentIndex={currentIndex}
-          onNext={() => setCurrentIndex((i) => (i + 1) % tracks.length)}
-          onPrev={() => setCurrentIndex((i) => (i - 1 + tracks.length) % tracks.length)}
+          onNext={() => setCurrentIndex((i) => (i + 1) % filteredTracks.length)}
+          onPrev={() => setCurrentIndex((i) => (i - 1 + filteredTracks.length) % filteredTracks.length)}
           style={{ gridColumn: "1 / -1", marginTop: 0 }}
         />
       </Layout>

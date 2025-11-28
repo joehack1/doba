@@ -29,13 +29,13 @@ const Nav = styled.nav`
   }
 `;
 
-export default function Sidebar(){
+export default function Sidebar({ onSearchClick = () => {} }){
   return (
     <Box>
       <Logo>Purpleify</Logo>
       <Nav>
         <button><FaHome /> Home</button>
-        <button><FaSearch /> Search</button>
+        <button onClick={onSearchClick}><FaSearch /> Search</button>
         <button><FaMusic /> Library</button>
       </Nav>
       <div style={{ marginTop: "auto", fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
