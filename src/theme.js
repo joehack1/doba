@@ -5,9 +5,10 @@ export const theme = {
     card: "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))",
     glass: "rgba(255,255,255,0.1)",
     glassBorder: "rgba(255,255,255,0.2)",
-    primary: "#00B8D9", // cyan
-    primaryLight: "#66EAF8",
-    accent: "#00FFF1",
+    primary: "#6C5CE7", // vibrant purple
+    primaryLight: "#9B8CFF",
+    accent: "linear-gradient(135deg,#7b3fe4,#ff49a1)",
+    vibrant: "linear-gradient(90deg,#7b3fe4,#ff49a1)",
     secondary: "#9C27B0", // purple
     secondaryLight: "#BA68C8",
     text: "#FFFFFF",
