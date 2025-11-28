@@ -1,16 +1,44 @@
 # React + Vite
+This project is a small Spotify-like music player built with React and Vite.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Features
+- Dark, responsive UI inspired by Spotify (sidebar, main content, player at bottom).
+- Search and discover music using the iTunes Search API (client-side). 
+- Plays iTunes preview audio (30-second previews) and shows artwork when available.
+- Dynamic library sections: Featured, Recently Played, Playlists, and All Tracks.
+- Vibrant gradients and hover/active states for a modern look.
 
-Currently, two official plugins are available:
+Quick start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Install dependencies:
 
-## React Compiler
+```pwsh
+npm install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. Run the dev server:
 
-## Expanding the ESLint configuration
+```pwsh
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+3. Open the URL printed by Vite (usually `http://localhost:5173`).
+
+Usage notes
+- On first load the app fetches a small seed of tracks from the iTunes Search API. Use the `Discover` button in the top-right to fetch more tracks (popular artists).
+- Tracks are played directly from the iTunes `previewUrl` (30s previews). The app does not host or provide full songs.
+- Artwork is fetched from iTunes when available; otherwise a colorful placeholder is shown.
+
+Why iTunes?
+- iTunes Search API is public and requires no authentication for basic metadata and preview audio, making it convenient for prototypes and demos.
+
+Caveats
+- Previews are short (30 seconds) and intended for sampling only.
+- For production or full-track playback you'd need licensed streaming sources or a proper music API with permission.
+
+Next steps you might want to add
+- Persist the library to `localStorage` so discovered tracks survive reloads.
+- Add an "Import by artist" input to fetch specific artists.
+- Loading indicators and error UI for network requests.
+
+If you'd like, I can implement any of the next steps above — tell me which one to add.
