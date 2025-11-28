@@ -4,7 +4,7 @@ import { theme } from "./theme";
 import Sidebar from "./components/Sidebar";
 import Library from "./components/Library";
 import Player from "./components/Player";
-import SearchBar from "./components/SearchBar";
+import TopBar from "./components/TopBar";
 
 const Global = createGlobalStyle`
   * { box-sizing: border-box; }
@@ -101,7 +101,7 @@ export default function App() {
       <Layout>
         <Sidebar onSearchClick={() => searchInputRef.current?.focus?.()} />
         <Main>
-          <SearchBar inputRef={searchInputRef} onSearch={(q) => setSearch(q)} />
+          <TopBar inputRef={searchInputRef} onSearch={(q) => setSearch(q)} />
           <Library tracks={filteredTracks} currentIndex={currentIndex} onPlay={(i) => setCurrentIndex(i)} />
         </Main>
 

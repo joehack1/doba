@@ -2,105 +2,61 @@
 import React from "react";
 import styled from "styled-components";
 
-const List = styled.div`
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+const Head = styled.div`
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;
+    h3{ margin:0; }
 `;
 
-const Track = styled.div`
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:16px;
-    border-radius:12px;
-    cursor:pointer;
-    transition: all 0.3s ease;
+const Section = styled.section`
+    margin-bottom: 20px;
+`;
+
+const Grid = styled.div`
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+`;
+
+const Card = styled.div`
     background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    &:hover {
-        background: linear-gradient(135deg, rgba(0,184,217,0.1), rgba(156,39,176,0.05));
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,184,217,0.15);
-        border-color: rgba(0,184,217,0.3);
-    }
-`;
-
-const Meta = styled.div`
-    display:flex;
-    align-items:center;
-    gap:16px;
-    flex:1;
+    padding:12px; border-radius:12px; display:flex; gap:12px; align-items:end; height:120px; cursor:pointer;
+    transition: transform 150ms ease, box-shadow 150ms;
+    &:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
 `;
 
 const Cover = styled.img`
-    width:48px;
-    height:48px;
-    border-radius:8px;
-    object-fit:cover;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    width:64px; height:64px; border-radius:8px; object-fit:cover; margin-left:auto; box-shadow: 0 6px 18px rgba(0,0,0,0.6);
 `;
 
-const TextInfo = styled.div`
-    display:flex;
-    flex-direction:column;
-    gap:4px;
+const SmallCard = styled.div`
+    min-width:140px; height:140px; border-radius:10px; padding:12px; display:flex; flex-direction:column; justify-content:flex-end; gap:8px; cursor:pointer;
+    background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
 `;
 
-const Title = styled.div`
-    font-weight:600;
-    font-size:16px;
-    color: ${({theme}) => theme.colors.text};
+const SmallCover = styled.img` width:100%; height:88px; object-fit:cover; border-radius:8px; `;
+
+const List = styled.div`
+    display:flex; flex-direction:column; gap:12px;
 `;
 
-const Artist = styled.div`
-    font-size:14px;
-    color: ${({theme}) => theme.colors.subtext};
+const TrackRow = styled.div`
+    display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; cursor:pointer;
+    background: transparent; &:hover { background: rgba(255,255,255,0.02); }
 `;
 
-const Right = styled.div`
-    display:flex;
-    align-items:center;
-    gap:16px;
-`;
+const Empty = styled.div` color:#666; padding: 20px; `;
 
-const Duration = styled.div`
-    font-size:14px;
-    color: ${({theme}) => theme.colors.subtext};
-`;
+export default function Library({ tracks = [], onPlay = () => {}, currentIndex = -1 }) {
+    if (!tracks || tracks.length === 0) return <Empty>No tracks in your library</Empty>;
 
-const PlayBtn = styled.button`
-    background: linear-gradient(135deg, #00B8D9, #00FFF1);
-    border:none;
-    color:white;
-    padding:8px 16px;
-    border-radius:20px;
-    cursor:pointer;
-    font-weight:600;
-    font-size:14px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,184,217,0.3);
-    &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(0,184,217,0.4);
-    }
-`;
+    const featured = tracks.slice(0, 6);
+    const recent = tracks.slice(0, Math.min(8, tracks.length));
 
-const Empty = styled.div`
-    color:#666;
-    padding: 20px;
-`;
-
-const Head = styled.div`
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;
-  h3{ margin:0; }
-`;
-
-const TrackList = ({ tracks = [], onPlay = () => {} }) => {
-    if (!tracks || tracks.length === 0) {
-        return <Empty>No tracks in your library</Empty>;
-    }
+    const playlists = Array.from({ length: 6 }).map((_, i) => ({
+        id: `pl-${i}`,
+        name: `Playlist ${i + 1}`,
+        cover: tracks[i % tracks.length]?.cover,
+    }));
 
     const fmtMs = (ms) => {
         if (ms == null) return "";
@@ -111,33 +67,71 @@ const TrackList = ({ tracks = [], onPlay = () => {} }) => {
     };
 
     return (
-        <List>
-            {tracks.map((t, i) => (
-                <Track key={t.id ?? i} onClick={() => onPlay(t)}>
-                    <Meta>
-                        <Cover src={t.cover || "/assets/cover-placeholder.png"} alt="cover" />
-                        <TextInfo>
-                            <Title>{t.title ?? t.name ?? "Unknown"}</Title>
-                            <Artist>{t.artist || (t.artists?.map(a => a.name).join(", ")) || "Unknown"}</Artist>
-                        </TextInfo>
-                    </Meta>
-                    <Right>
-                        <Duration>{t.duration_ms ? fmtMs(t.duration_ms) : t.duration ?? ""}</Duration>
-                        <PlayBtn onClick={(e) => { e.stopPropagation(); onPlay(t); }}>Play</PlayBtn>
-                    </Right>
-                </Track>
-            ))}
-        </List>
-    );
-};
-
-export default function Library({ tracks, onPlay, currentIndex = -1 }) {
-    return (
-        <>
+        <div>
             <Head>
                 <h3>Your Library</h3>
             </Head>
-            <TrackList tracks={tracks} onPlay={onPlay} />
-        </>
+
+            <Section>
+                <h4 style={{ margin: "6px 0 8px 0" }}>Featured</h4>
+                <Grid>
+                    {featured.map((t, i) => (
+                        <Card key={t.id ?? i} onClick={() => onPlay(i)}>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <strong style={{ fontSize: 14 }}>{t.title}</strong>
+                                <small style={{ color: "rgba(255,255,255,0.7)" }}>{t.artist}</small>
+                            </div>
+                            <Cover src={t.cover} alt="cover" />
+                        </Card>
+                    ))}
+                </Grid>
+            </Section>
+
+            <Section>
+                <h4 style={{ margin: "6px 0 8px 0" }}>Recently played</h4>
+                <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 6 }}>
+                    {recent.map((t, i) => (
+                        <SmallCard key={t.id ?? i} onClick={() => onPlay(i)}>
+                            <SmallCover src={t.cover} alt="cover" />
+                            <div style={{ fontSize: 13, fontWeight: 600 }}>{t.title}</div>
+                            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{t.artist}</div>
+                        </SmallCard>
+                    ))}
+                </div>
+            </Section>
+
+            <Section>
+                <h4 style={{ margin: "6px 0 8px 0" }}>Playlists</h4>
+                <Grid>
+                    {playlists.map((p) => (
+                        <Card key={p.id} onClick={() => console.log('open playlist', p.id)}>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <strong style={{ fontSize: 14 }}>{p.name}</strong>
+                                <small style={{ color: "rgba(255,255,255,0.7)" }}>{Math.floor(Math.random() * 50) + 10} songs</small>
+                            </div>
+                            <Cover src={p.cover} alt="cover" />
+                        </Card>
+                    ))}
+                </Grid>
+            </Section>
+
+            <Section>
+                <h4 style={{ margin: "6px 0 8px 0" }}>All tracks</h4>
+                <List>
+                    {tracks.map((t, i) => (
+                        <TrackRow key={t.id ?? i} onClick={() => onPlay(i)}>
+                            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                                <img src={t.cover} alt="cover" style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover' }} />
+                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                    <strong style={{ fontSize: 14 }}>{t.title}</strong>
+                                    <small style={{ color: "rgba(255,255,255,0.7)" }}>{t.artist}</small>
+                                </div>
+                            </div>
+                            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>{t.duration || fmtMs(t.duration_ms)}</div>
+                        </TrackRow>
+                    ))}
+                </List>
+            </Section>
+        </div>
     );
 }

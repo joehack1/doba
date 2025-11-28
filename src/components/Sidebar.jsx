@@ -38,9 +38,20 @@ export default function Sidebar({ onSearchClick = () => {} }){
         <button onClick={onSearchClick}><FaSearch /> Search</button>
         <button><FaMusic /> Library</button>
       </Nav>
-      <div style={{ marginTop: "auto", fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
-        Built with ❤️ React
-      </div>
+          <div>
+            <h4 style={{ margin: '6px 0 8px 0' }}>Playlists</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 220, overflow: 'auto' }}>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <button key={i} style={{ textAlign: 'left', padding: '6px 8px', fontSize: 13 }}>
+                  Playlist {i + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginTop: "auto", fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+            Built with ❤️ React
+          </div>
     </Box>
   );
 }
